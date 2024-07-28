@@ -30,7 +30,7 @@ export async function getCollection(collectionName) {
     return colMap;
 }
 
-export async function filterCollection(filterhName, collectionName){
+export async function filterCollection(filterName, collectionName){
     var colMap = await getCollection(collectionName);
     var filterMap = new Map();
     for(var [key, value] of colMap){
@@ -39,6 +39,15 @@ export async function filterCollection(filterhName, collectionName){
         }
     }
     return filterMap;
+}
+
+export async function getCollectionProperty(propertyName, collectionName){
+    var colMap = await getCollection(collectionName, "Map");
+    var propMap = new Map();
+    for(var [key, value] of colMap){
+        propMap.set(key, value[propertyName]);
+    }
+    return propMap;
 }
 
 export async function getDocument(documentName, collectionName){
@@ -54,13 +63,9 @@ export async function deleteDocument(documentName, collectionName){
     await deleteDoc(doc(db, collectionName, documentName));
 }
 
-export async function getProperty(propertyName, collectionName){
-    var colMap = await getCollection(collectionName, "Map");
-    var propMap = new Map();
-    for(var [key, value] of colMap){
-        propMap.set(key, value[propertyName]);
-    }
-    return propMap;
+export async function getProperty(propertyName, documentName, collectionName){
+    var doc = await getDocument(documentName, collectionName);
+    return doc[propertyName];
 }
 
 export async function setProperty(propertyName, newProperty, documentName, collectionName){
